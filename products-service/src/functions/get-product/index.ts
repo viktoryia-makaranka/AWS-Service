@@ -12,8 +12,12 @@ export default {
           schemas: {
             'application/json': schema,
           },
-        },
-        cors: true
+          parameters: {
+            paths: {
+              id: true
+            }
+          }
+        }
       }
     }
   ]
