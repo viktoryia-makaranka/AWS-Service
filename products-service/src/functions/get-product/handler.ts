@@ -1,9 +1,9 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import { middyfy } from '@libs/lambda'
 import { ValidatedEventAPIGatewayProxyEvent, handleError } from '@libs/api-gateway'
 import { getProduct } from '@services/getProductById'
-import schema from './schema'
 
-const _getProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const _getProduct: ValidatedEventAPIGatewayProxyEvent<APIGatewayProxyEvent> = async (event) => {
   console.log('[START] ', JSON.stringify(event))
 
   const { id } = event.pathParameters
