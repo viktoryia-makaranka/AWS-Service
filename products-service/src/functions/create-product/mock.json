@@ -1,0 +1,7 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"title\":\"title\",\"description\":\"description\",\"count\":100,\"price\":99}",
+  "httpMethod": "POST"
+}

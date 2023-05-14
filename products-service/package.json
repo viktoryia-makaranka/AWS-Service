@@ -5,8 +5,11 @@
   "main": "serverless.ts",
   "scripts": {
     "test:local:getProductById": "npx sls invoke local -f getProductById --path src/functions/get-product/mock.json",
+    "test:local:getStockById": "npx sls invoke local -f getStockById --path src/functions/get-stock/mock.json",
     "test:local:getProducts": "npx sls invoke local -f getProducts --path src/functions/get-products/mock.json",
-    "lint": "eslint --ext .js,.ts ."
+    "test:local:getProductsList": "npx sls invoke local -f getProductsList --path src/functions/get-products-list/mock.json",
+    "lint": "eslint --ext .js,.ts .",
+    "fill-tables": "AWS_REGION=us-east-1 npx ts-node src/scripts/put-items.ts"
   },
   "engines": {
     "node": ">=14.15.0"
@@ -14,9 +17,15 @@
   "dependencies": {
     "@middy/core": "^3.4.0",
     "@middy/http-cors": "^4.3.0",
-    "@middy/http-json-body-parser": "^3.4.0"
+    "@middy/http-error-handler": "^4.3.1",
+    "@middy/http-json-body-parser": "^3.4.0",
+    "@middy/validator": "^4.3.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.312.0",
+    "@aws-sdk/credential-providers": "^3.312.0",
+    "@aws-sdk/lib-dynamodb": "^3.312.0",
     "@serverless/typescript": "^3.0.0",
     "@types/aws-lambda": "^8.10.71",
     "@types/jest": "^29.5.0",
@@ -25,8 +34,10 @@
     "@typescript-eslint/parser": "^5.57.1",
     "esbuild": "^0.14.11",
     "eslint": "^8.38.0",
+    "install": "^0.13.0",
     "jest": "^29.5.0",
     "json-schema-to-ts": "^1.5.0",
+    "npm": "^9.6.4",
     "serverless": "^3.2.0",
     "serverless-auto-swagger": "^2.12.0",
     "serverless-esbuild": "^1.23.3",

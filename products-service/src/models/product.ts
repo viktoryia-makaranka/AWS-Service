@@ -14,3 +14,7 @@ export interface Product {
     collection: baseObjectType,
     group: baseObjectType
 }
+
+export interface ProductWithStock extends Product {
+    count: number
+}
