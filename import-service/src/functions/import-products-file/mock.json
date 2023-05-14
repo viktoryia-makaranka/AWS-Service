@@ -1,0 +1,10 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "queryStringParameters": {
+    "name": "filename"
+  },
+  "body": null,
+  "httpMethod": "GET"
+}
