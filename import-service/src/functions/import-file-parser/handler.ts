@@ -23,7 +23,7 @@ const importFileParser = async (event: S3Event) => {
       isTruncated = IsTruncated
       command.input.ContinuationToken = NextContinuationToken
 
-      for (const { Key } of Contents.filter(({ Key }) => Key)) {
+      for (const { Key } of Contents.filter(({ Key }) => Key.split('/')[1])) {
         const command = new GetObjectCommand({
           Bucket: process.env.UPLOAD_BUCKET,
           Key
