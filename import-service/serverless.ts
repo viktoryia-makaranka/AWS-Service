@@ -30,13 +30,21 @@ const serverlessConfiguration: AWS = {
           'arn:aws:s3:::${self:provider.environment.UPLOAD_BUCKET}/*'
         ]
       },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: [
+          'arn:aws:sqs:us-east-1:308936485245:product-service-queue'
+        ]
+      }
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       UPLOAD_FOLDER: 'uploaded',
       PARSED_FOLDER: 'parsed',
-      UPLOAD_BUCKET: 'import-service-s3-bucket'
+      UPLOAD_BUCKET: 'import-service-s3-bucket',
+      SQS: 'https://sqs.us-east-1.amazonaws.com/308936485245/product-service-queue'
     },
   },
   functions: { importProductsFile, importFileParser },

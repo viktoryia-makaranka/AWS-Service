@@ -1,13 +1,14 @@
 import type { S3Event } from 'aws-lambda'
 import { S3Client, ListObjectsV2Command, GetObjectCommand, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { SQS, SendMessageCommand } from '@aws-sdk/client-sqs'
 import csv from 'csv-parser'
 import { Readable } from 'stream'
 
-import { middyfy } from '../../libs/lambda'
-
-const importFileParser = async (event: S3Event) => {
+export const importFileParser = async (event: S3Event) => {
   try {
     const client = new S3Client({})
+    const queue = new SQS({})
+
     const command = new ListObjectsV2Command({
       Bucket: process.env.UPLOAD_BUCKET,
       Prefix: `${ process.env.UPLOAD_FOLDER }/`
@@ -30,12 +31,20 @@ const importFileParser = async (event: S3Event) => {
         })
 
         try {
-          console.log('[IMPORT START]', Key)
           const { Body } = await client.send(command)
 
           await (Body as Readable).pipe(csv({ separator: ';' }))
-            .on('data', (data) => {
-              console.log('[LINE IMPORT SUCCESS]', data)
+            .on('data', async (data) => {
+              try {
+                const res = await queue.send(new SendMessageCommand({
+                  QueueUrl: process.env.SQS,
+                  MessageBody: JSON.stringify(data)
+                }))
+
+                console.log(`MESSAGE SENT to '${process.env.SQS}'`, res)
+              } catch (err) {
+                console.log(`MESSAGE FAILED to '${process.env.SQS}'`, err)
+              }
             })
 
           const CopySource = `${ process.env.UPLOAD_BUCKET }/${ Key }`
@@ -61,12 +70,16 @@ const importFileParser = async (event: S3Event) => {
       }
     }
 
-    return results
+    const response = {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: results
+    }
+
+    return response
   } catch (error) {
     console.error('[FAIL READ BUCKET]: ', error.errorMessage)
 
     throw new Error(error)
   }
 }
-
-export const main = middyfy(importFileParser)
