@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.325.0",
+    "@aws-sdk/client-sqs": "^3.341.0",
     "@aws-sdk/s3-request-presigner": "^3.325.0",
     "@middy/core": "^3.4.0",
     "@middy/http-cors": "^4.4.0",
